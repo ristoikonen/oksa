@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Canvas2D } from "./components/Canvas2D";
-import { CanvasBranchy } from "./components/CanvasBranchy";
+import { CanvasBranchy, type BranchStyle } from "./components/CanvasBranchy";
 import { Viewer3D } from "./components/Viewer3D";
 import { BidirectionalBridge } from "./components/BidirectionalBridge";
 
 export default function App() {
   const [inputVal, setInputVal] = useState<string>("OKSA-01");
-  const [viewMode, setViewMode] = useState<"split" | "2d" | "3d" | "branchy" | "2way">("2way");
+  const [viewMode, setViewMode] = useState<"split" | "2d" | "3d" | "branchy" | "2way">("branchy");
+  const [branchStyle, setBranchStyle] = useState<BranchStyle>("knotty");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cleaned = e.target.value.toUpperCase().slice(0, 9);
@@ -57,7 +58,7 @@ export default function App() {
 
       {/* Main Workspace */}
       <section className="my-auto py-12 flex flex-col items-center w-full max-w-4xl mx-auto">
-        <div className="w-full max-w-md mb-12">
+        <div className="w-full max-w-md mb-8">
           <label className={`block text-xs uppercase tracking-widest mb-3 ${isBranchy ? "text-black/60" : "text-white/50"}`}>
             Identity String (Max 9 Chars)
           </label>
@@ -78,6 +79,31 @@ export default function App() {
           </div>
         </div>
 
+        {/* Branch Style Sub-Selector (Only active in Branchy mode) */}
+        {isBranchy && (
+          <div className="flex gap-3 mb-8 bg-black/5 p-1.5 border border-black/10">
+            {(
+              [
+                { id: "knotty", label: "KNOTTY BRANCH" },
+                { id: "thin", label: "ULTRA THIN" },
+                { id: "steel", label: "STEEL FRAME" },
+              ] as const
+            ).map((style) => (
+              <button
+                key={style.id}
+                onClick={() => setBranchStyle(style.id)}
+                className={`px-3 py-1.5 text-[10px] tracking-widest transition-all cursor-pointer ${
+                  branchStyle === style.id
+                    ? "bg-black text-white font-semibold"
+                    : "text-black/60 hover:text-black"
+                }`}
+              >
+                {style.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Visualizers Container */}
         {is2Way ? (
           <BidirectionalBridge text={inputVal} />
@@ -89,7 +115,7 @@ export default function App() {
                 : "grid-cols-1 max-w-md mx-auto"
             }`}
           >
-            {/* 2D Orthogonal Matrix */}
+            {/* 2D View */}
             {(viewMode === "split" || viewMode === "2d") && (
               <div className="border border-white/10 bg-white/[0.01] p-6 flex flex-col items-center justify-center relative aspect-square">
                 <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/40">
@@ -99,17 +125,17 @@ export default function App() {
               </div>
             )}
 
-            {/* Branchy Vector Graph */}
+            {/* Branchy Mode View */}
             {viewMode === "branchy" && (
               <div className="bg-black border border-black p-6 flex flex-col items-center justify-center relative aspect-square shadow-2xl">
                 <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/60">
-                  Matrix Graph // Oksa (Branchy)
+                  Matrix Graph // Oksa ({branchStyle.toUpperCase()})
                 </span>
-                <CanvasBranchy text={inputVal} />
+                <CanvasBranchy text={inputVal} branchStyle={branchStyle} />
               </div>
             )}
 
-            {/* 3D Kinetic View */}
+            {/* 3D View */}
             {(viewMode === "split" || viewMode === "3d") && (
               <div className="border border-white/10 bg-white/[0.01] p-6 flex flex-col items-center justify-center relative aspect-square">
                 <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/40">
@@ -124,8 +150,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className={`border-t pt-6 flex justify-between text-xs tracking-wider ${isBranchy ? "border-black/10 text-black/40" : "border-white/10 text-white/40"}`}>
-        <span>POWERED BY VITE & BUN</span>
-        <span>WHITE & SPARSE</span>
+        <div>Prototype. &copy;Risto Ikonen 2026. All Rights reserved.</div>
       </footer>
     </main>
   );

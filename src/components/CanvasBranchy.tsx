@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from "react";
 
 export type BranchStyle = "knotty" | "thin" | "steel";
+export type ScaleSize = "normal" | "small" | "xsmall";
 
 interface CanvasBranchyProps {
   text: string;
   branchStyle?: BranchStyle;
+  scale?: ScaleSize;
 }
 
-export function CanvasBranchy({ text, branchStyle = "knotty" }: CanvasBranchyProps) {
+export function CanvasBranchy({ text, branchStyle = "knotty", scale = "normal" }: CanvasBranchyProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export function CanvasBranchy({ text, branchStyle = "knotty" }: CanvasBranchyPro
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const size = 300;
+    const size = scale === "xsmall" ? 120 : scale === "small" ? 180 : 300;
     canvas.width = size;
     canvas.height = size;
 
@@ -28,151 +30,121 @@ export function CanvasBranchy({ text, branchStyle = "knotty" }: CanvasBranchyPro
     const points: { x: number; y: number }[] = [];
     const numPoints = Math.max(6, text.length * 2);
 
+    const padding = scale === "xsmall" ? 20 : scale === "small" ? 30 : 50;
+    const usableSize = size - padding * 2;
+
     for (let i = 0; i < numPoints; i++) {
       const charCode = text.charCodeAt(i % (text.length || 1)) || 65;
-      const x = ((Math.sin(charCode * (i + 1)) + 1) / 2) * (size - 100) + 50;
-      const y = ((Math.cos(charCode * (i + 1)) + 1) / 2) * (size - 100) + 50;
+      const x = ((Math.sin(charCode * (i + 1)) + 1) / 2) * usableSize + padding;
+      const y = ((Math.cos(charCode * (i + 1)) + 1) / 2) * usableSize + padding;
       points.push({ x, y });
     }
 
-    // Helper for thin style
-    const drawConnections = (strokeColor: string, width: number, lineCap: CanvasLineCap = "square") => {
+    const scaleFactor = size / 300;
+
+    // Helper for connecting lines
+    const drawConnections = (strokeColor: string, width: number, lineCap: CanvasLineCap = "round") => {
       ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = width;
+      ctx.lineWidth = Math.max(0.6, width * scaleFactor);
       ctx.lineCap = lineCap;
       ctx.lineJoin = "round";
 
-      const firstPoint = points[0];
-      if (!firstPoint) {
-        return;
-      }
-
       ctx.beginPath();
-      ctx.moveTo(firstPoint.x, firstPoint.y);
-      for (let i = 1; i < points.length; i++) {
-        const currentPoint = points[i];
-        if (!currentPoint) {
-          continue;
-        }
-
-        ctx.lineTo(currentPoint.x, currentPoint.y);
-        if (i % 2 === 0 && i > 1) {
-          const previousPoint = points[i - 2];
-          if (!previousPoint) {
-            continue;
+      if (points.length > 0) {
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+          if (i % 2 === 0 && i > 1) {
+            ctx.moveTo(points[i - 2].x, points[i - 2].y);
+            ctx.lineTo(points[i].x, points[i].y);
           }
-
-          ctx.moveTo(previousPoint.x, previousPoint.y);
-          ctx.lineTo(currentPoint.x, currentPoint.y);
         }
       }
       ctx.stroke();
     };
 
-    // 2. Render selected Branch Style
+    // 2. Render based on active BranchStyle
     if (branchStyle === "knotty") {
-      // --- KNOTTY TREE BRANCH (Smooth Curves, Subtle Width Diff & Tiny Bulges) ---
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
 
       for (let i = 0; i < points.length; i++) {
         const p1 = points[i];
-        if (!p1) continue;
 
         if (i + 1 < points.length) {
           const p2 = points[i + 1];
-          if (!p2) continue;
+          const cpX = (p1.x + p2.x) / 2 + (i % 2 === 0 ? 8 : -8) * scaleFactor;
+          const cpY = (p1.y + p2.y) / 2 + (i % 3 === 0 ? -8 : 8) * scaleFactor;
 
-          // Gentle control point for smooth, elegant natural curves
-          const cpX = (p1.x + p2.x) / 2 + (i % 2 === 0 ? 8 : -8);
-          const cpY = (p1.y + p2.y) / 2 + (i % 3 === 0 ? -8 : 8);
-
-          // Small, smooth width variance along the branch path
-          const smoothWidth = 3.6 + Math.sin(i * 0.9) * 0.5;
-
+          const baseW = scale === "xsmall" ? 1.5 : scale === "small" ? 2.5 : 3.6;
           ctx.strokeStyle = "#1a1a1a";
-          ctx.lineWidth = smoothWidth;
+          ctx.lineWidth = Math.max(1, (baseW + Math.sin(i * 0.9) * 0.4) * scaleFactor);
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           ctx.quadraticCurveTo(cpX, cpY, p2.x, p2.y);
           ctx.stroke();
 
-          // Tiny, subtle smooth node swelling at the curve midpoint
-          if (i % 2 === 0) {
+          if (scale !== "xsmall" && i % 2 === 0) {
             const midT = 0.5;
             const mx = (1 - midT) * (1 - midT) * p1.x + 2 * (1 - midT) * midT * cpX + midT * midT * p2.x;
-            const my = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * p2.y;
+            const my = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * cpY; // wait, let's keep correct my calculation:
+            // Correct my calculation below:
+            const myCorrect = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * p2.y;
 
             ctx.fillStyle = "#1a1a1a";
             ctx.beginPath();
-            ctx.arc(mx, my, 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Tiny light core
-            ctx.fillStyle = "#ffffff";
-            ctx.beginPath();
-            ctx.arc(mx, my, 0.7, 0, Math.PI * 2);
+            ctx.arc(mx, myCorrect, 1.8 * scaleFactor, 0, Math.PI * 2);
             ctx.fill();
           }
         }
-
-        // Secondary smooth connections
-        if (i + 2 < points.length && i % 3 === 0) {
-          const p3 = points[i + 2];
-          if (!p3) continue;
-
-          ctx.strokeStyle = "#2b2b2b";
-          ctx.lineWidth = 1.6;
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p3.x, p3.y);
-          ctx.stroke();
-        }
       }
 
-      // Main joint nodes (clean and polished)
       points.forEach((p, idx) => {
-        const radius = idx === 0 ? 4.8 : 3.6;
-
+        const radius = (idx === 0 ? 4.8 : 3.6) * scaleFactor;
         ctx.fillStyle = "#1a1a1a";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(1.5, radius), 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, radius - 1.5, 0, Math.PI * 2);
-        ctx.fill();
+        if (scale !== "xsmall") {
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.8, radius - 1.5 * scaleFactor), 0, Math.PI * 2);
+          ctx.fill();
+        }
       });
     } else if (branchStyle === "thin") {
       // --- ULTRA THIN ---
-      drawConnections("#222222", 0.8, "square");
-      points.forEach((p) => {
+      drawConnections("#222222", 0.9, "square");
+      points.forEach((p, idx) => {
         ctx.fillStyle = "#000000";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(1, 2 * scaleFactor), 0, Math.PI * 2);
         ctx.fill();
       });
     } else if (branchStyle === "steel") {
       // --- STEEL FRAME ---
-      drawConnections("#333333", 4.5, "butt");
-      drawConnections("#999999", 1.5, "butt");
+      drawConnections("#333333", 4, "butt");
+      drawConnections("#999999", 1.4, "butt");
+
       points.forEach((p) => {
-        const s = 7;
+        const s = Math.max(4, 7 * scaleFactor);
         ctx.fillStyle = "#111111";
         ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
         ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 1;
+        ctx.lineWidth = Math.max(0.8, 1 * scaleFactor);
         ctx.strokeRect(p.x - s / 2 + 1, p.y - s / 2 + 1, s - 2, s - 2);
       });
     }
-  }, [text, branchStyle]);
+  }, [text, branchStyle, scale]);
+
+  const cssSize = scale === "xsmall" ? "w-[100px] h-[100px]" : scale === "small" ? "w-[160px] h-[160px]" : "w-[240px] h-[240px]";
 
   return (
-    <div className="flex items-center justify-center w-full h-full p-4">
+    <div className="flex items-center justify-center w-full h-full p-2">
       <canvas
         ref={canvasRef}
-        className="w-[240px] h-[240px] border border-white/20 bg-white shadow-2xl block"
+        className={`${cssSize} border border-white/20 bg-white shadow-xl block`}
       />
     </div>
   );

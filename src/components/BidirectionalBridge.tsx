@@ -30,22 +30,22 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
   }, [encodedNodes]);
 
   return (
-    <div className="w-full max-w-2xl border border-white/20 bg-black p-6 font-mono text-xs text-white">
-      <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
-        <span className="tracking-widest uppercase text-white/50">
+    <div className="w-full max-w-2xl rounded-xl border border-border bg-card p-4 font-mono text-xs text-foreground shadow-sm sm:p-6">
+      <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+        <span className="tracking-widest uppercase text-muted-foreground">
           Bi-Directional Pipeline [2WAY-OKSA]
         </span>
-        <span className="text-emerald-400 tracking-wider">● SYNCED</span>
+        <span className="tracking-wider text-emerald-700">● SYNCED</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Forward Stream */}
         <div className="space-y-3">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase">
+          <div className="text-[10px] tracking-widest uppercase text-muted-foreground">
             01 // Forward Encoding (String $\rightarrow$ Matrix)
           </div>
-          <div className="p-3 border border-white/10 bg-white/[0.02]">
-            <div className="text-white/50 text-[10px] mb-1">INPUT PAYLOAD</div>
+          <div className="border border-border bg-slate-50 p-3">
+            <div className="mb-1 text-[10px] text-muted-foreground">INPUT PAYLOAD</div>
             <div className="text-lg tracking-[0.3em] font-light">
               {text.padEnd(9, "·")}
             </div>
@@ -54,12 +54,12 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
 
         {/* Reverse Stream */}
         <div className="space-y-3">
-          <div className="text-[10px] text-white/40 tracking-widest uppercase">
+          <div className="text-[10px] tracking-widest uppercase text-muted-foreground">
             02 // Reverse Decoding (Matrix $\rightarrow$ String)
           </div>
-          <div className="p-3 border border-white/10 bg-white/[0.02]">
-            <div className="text-white/50 text-[10px] mb-1">RECONSTRUCTED HASH</div>
-            <div className="text-lg tracking-[0.3em] font-light text-white/90">
+          <div className="border border-border bg-blue-50/70 p-3">
+            <div className="mb-1 text-[10px] text-muted-foreground">RECONSTRUCTED HASH</div>
+            <div className="text-lg tracking-[0.3em] font-light text-blue-800">
               {decodedString || "NULL"}
             </div>
           </div>
@@ -68,13 +68,13 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
 
       {/* Node Mapping Table */}
       <div className="mt-8">
-        <div className="text-[10px] text-white/40 tracking-widest uppercase mb-3">
+        <div className="mb-3 text-[10px] tracking-widest uppercase text-muted-foreground">
           03 // Deterministic Node Correspondence Matrix
         </div>
-        <div className="border border-white/10 overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/10 text-white/40 text-[10px]">
+              <tr className="border-b border-border bg-slate-50 text-[10px] text-muted-foreground">
                 <th className="p-2">IDX</th>
                 <th className="p-2">CHAR</th>
                 <th className="p-2">HEX VALUE</th>
@@ -83,11 +83,11 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
             </thead>
             <tbody>
               {encodedNodes.map((node) => (
-                <tr key={node.index} className="border-b border-white/5 hover:bg-white/[0.02]">
-                  <td className="p-2 text-white/30">#{node.index + 1}</td>
+                <tr key={node.index} className="border-b border-border/70 transition-colors last:border-0 hover:bg-slate-50">
+                  <td className="p-2 text-muted-foreground">#{node.index + 1}</td>
                   <td className="p-2 font-bold">{node.char}</td>
-                  <td className="p-2 text-white/70">{node.hex}</td>
-                  <td className="p-2 text-white/50">{node.bitweight}</td>
+                  <td className="p-2 text-blue-700">{node.hex}</td>
+                  <td className="p-2 text-muted-foreground">{node.bitweight}</td>
                 </tr>
               ))}
             </tbody>

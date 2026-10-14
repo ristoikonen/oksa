@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Canvas2D } from "./components/Canvas2D";
 import { CanvasBranchy, type BranchStyle } from "./components/CanvasBranchy";
-import { Viewer3D } from "./components/Viewer3D";
 import { BidirectionalBridge } from "./components/BidirectionalBridge";
+import { Button } from "./components/ui/button";
+import { Card, CardContent } from "./components/ui/card";
+import { Input } from "./components/ui/input";
 
 export default function App() {
   const [inputVal, setInputVal] = useState<string>("OKSA-01");
   const [viewMode, setViewMode] = useState<
-    "split" | "2d" | "3d" | "branchy" | "branchy-small" | "branchy-xsmall" | "2way"
+    "branchy" | "branchy-small" | "branchy-xsmall" | "2way"
   >("branchy");
   const [branchStyle, setBranchStyle] = useState<BranchStyle>("knotty");
 
@@ -16,165 +17,174 @@ export default function App() {
     setInputVal(cleaned);
   };
 
-  const isBranchyAny = viewMode.startsWith("branchy");
   const is2Way = viewMode === "2way";
+  const modes = [
+    { id: "branchy", label: "Branch" },
+    { id: "branchy-small", label: "Small" },
+    { id: "branchy-xsmall", label: "X-small" },
+    { id: "2way", label: "2-way" },
+  ] as const;
 
   return (
-    <main
-      className={`min-h-screen flex flex-col justify-between p-8 transition-colors duration-300 ${
-        isBranchyAny ? "bg-white text-black selection:bg-black selection:text-white" : "bg-[#050505] text-white selection:bg-white selection:text-black"
-      }`}
-    >
-      {/* Header */}
-      <header
-        className={`flex justify-between items-center border-b pb-6 flex-wrap gap-4 ${
-          isBranchyAny ? "border-black/10" : "border-white/10"
-        }`}
-      >
-        <div>
-          <h1 className="text-xl tracking-widest font-light">OKSA PROJECT</h1>
-          <p className={`text-xs tracking-wider mt-1 ${isBranchyAny ? "text-black/50" : "text-white/40"}`}>
-            BI-DIRECTIONAL IDENTITY ASSET.
-          </p>
-        </div>
-        <div className="flex gap-1.5 flex-wrap">
-          {(["split", "2d", "branchy", "branchy-small", "branchy-xsmall", "3d", "2way"] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setViewMode(mode)}
-              className={`px-3 py-2 text-[10px] tracking-widest border transition-all cursor-pointer ${
-                viewMode === mode
-                  ? isBranchyAny
-                    ? "border-black bg-black text-white font-medium"
-                    : "border-white bg-white text-black font-medium"
-                  : isBranchyAny
-                  ? "border-black/20 text-black/70 hover:border-black/60"
-                  : "border-white/20 text-white/60 hover:border-white/60"
-              }`}
-            >
-              {mode === "branchy-small" ? "SMALL" : mode === "branchy-xsmall" ? "X-SMALL" : mode.toUpperCase()}
-            </button>
-          ))}
+    <main className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border bg-card">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <span className="size-2.5 rounded-full bg-[#f78522] shadow-[0_0_8px_#f78522]" aria-hidden="true" />
+            <div>
+              <h1 className="text-sm font-semibold tracking-wide">OKSA PROJECT</h1>
+              <p className="mt-0.5 text-xs text-muted-foreground">Bi-directional identity asset</p>
+            </div>
+          </div>
+          <span className="hidden rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 sm:inline-flex">
+            Visual identity studio
+          </span>
         </div>
       </header>
 
-      {/* Main Workspace */}
-      <section className="my-auto py-12 flex flex-col items-center w-full max-w-4xl mx-auto">
-        <div className="w-full max-w-md mb-8">
-          <label className={`block text-xs uppercase tracking-widest mb-3 ${isBranchyAny ? "text-black/60" : "text-white/50"}`}>
-            Identity String (Max 9 Chars)
-          </label>
-          <input
-            type="text"
-            value={inputVal}
-            onChange={handleInputChange}
-            placeholder="ENTER STRING"
-            className={`w-full bg-transparent border px-6 py-4 text-center tracking-[0.5em] text-xl focus:outline-none transition-colors ${
-              isBranchyAny
-                ? "border-black/30 text-black focus:border-black"
-                : "border-white/20 text-white focus:border-white"
-            }`}
-          />
-          <div className={`flex justify-between text-[10px] tracking-widest mt-2 px-1 ${isBranchyAny ? "text-black/40" : "text-white/30"}`}>
-            <span>SPARSE ENCODING</span>
-            <span>{inputVal.length} / 9 CHARS</span>
+      <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:px-8 lg:py-10">
+        <aside className="space-y-5">
+          <Card>
+            <CardContent className="space-y-6 p-5 sm:p-6">
+              <div>
+                <h2 className="text-base font-semibold tracking-tight">Identity input</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Create a visual from up to nine characters.</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground" htmlFor="identity-string">
+                  Identity string
+                </label>
+                <Input
+                  id="identity-string"
+                  maxLength={9}
+                  onChange={handleInputChange}
+                  placeholder="ENTER STRING"
+                  value={inputVal}
+                  aria-describedby="identity-count"
+                  className="h-12 text-center font-mono text-lg tracking-[0.3em] uppercase"
+                />
+                <div id="identity-count" className="flex justify-between text-xs text-muted-foreground">
+                  <span>Sparse encoding</span>
+                  <span>{inputVal.length} / 9</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">View mode</h3>
+                <div className="grid grid-cols-2 gap-2" role="group" aria-label="View mode">
+                  {modes.map((mode) => (
+                    <Button
+                      key={mode.id}
+                      aria-pressed={viewMode === mode.id}
+                      className="w-full"
+                      onClick={() => setViewMode(mode.id)}
+                      size="sm"
+                      variant={viewMode === mode.id ? "default" : "outline"}
+                    >
+                      {mode.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {viewMode.startsWith("branchy") && (
+                <div className="space-y-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Branch style</h3>
+                  <div className="grid grid-cols-1 gap-2" role="group" aria-label="Branch style">
+                    {(
+                      [
+                        { id: "knotty", label: "Knotty branch" },
+                        { id: "thin", label: "Ultra thin" },
+                        { id: "steel", label: "Steel frame" },
+                      ] as const
+                    ).map((style) => (
+                      <Button
+                        key={style.id}
+                        aria-pressed={branchStyle === style.id}
+                        className="justify-start"
+                        onClick={() => setBranchStyle(style.id)}
+                        size="sm"
+                        variant={branchStyle === style.id ? "secondary" : "ghost"}
+                      >
+                        <span className={`mr-2 size-2 rounded-full ${branchStyle === style.id ? "bg-primary" : "bg-slate-300"}`} aria-hidden="true" />
+                        {style.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="border-blue-100 bg-blue-50/70 shadow-none">
+            <CardContent className="p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">Identity preview</p>
+              <p className="mt-2 break-all font-mono text-lg font-semibold tracking-[0.2em] text-blue-700">
+                {inputVal || "—"}
+              </p>
+            </CardContent>
+          </Card>
+        </aside>
+
+        <section className="min-w-0 space-y-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Workspace</p>
+              <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Identity visualizer</h2>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {is2Way ? "Forward and reverse mapping" : `${viewMode.replace("branchy-", "").replace("branchy", "branch").toUpperCase()} render`}
+            </p>
           </div>
+
+          {is2Way ? (
+            <BidirectionalBridge text={inputVal} />
+          ) : (
+            <VisualizerCard
+              title="Matrix graph"
+              subtitle={`${branchStyle} · ${viewMode === "branchy" ? "normal" : viewMode === "branchy-small" ? "small" : "x-small"}`}
+            >
+              <CanvasBranchy
+                text={inputVal}
+                branchStyle={branchStyle}
+                scale={viewMode === "branchy" ? "normal" : viewMode === "branchy-small" ? "small" : "xsmall"}
+              />
+            </VisualizerCard>
+          )}
+        </section>
+      </div>
+
+      <footer className="border-t border-border bg-card">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:px-6 md:flex-row md:justify-between lg:px-8">
+          <span>Oksa · visual identity branches</span>
+          <span>Bi-directional, read/write visual identity concept</span>
         </div>
-
-        {/* Branch Style Sub-Selector (Active in all branchy views) */}
-        {isBranchyAny && (
-          <div className="flex gap-3 mb-8 bg-black/5 p-1.5 border border-black/10">
-            {(
-              [
-                { id: "knotty", label: "KNOTTY BRANCH" },
-                { id: "thin", label: "ULTRA THIN" },
-                { id: "steel", label: "STEEL FRAME" },
-              ] as const
-            ).map((style) => (
-              <button
-                key={style.id}
-                onClick={() => setBranchStyle(style.id)}
-                className={`px-3 py-1.5 text-[10px] tracking-widest transition-all cursor-pointer ${
-                  branchStyle === style.id
-                    ? "bg-black text-white font-semibold"
-                    : "text-black/60 hover:text-black"
-                }`}
-              >
-                {style.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Visualizers Container */}
-        {is2Way ? (
-          <BidirectionalBridge text={inputVal} />
-        ) : (
-          <div
-            className={`grid gap-8 w-full ${
-              viewMode === "split"
-                ? "grid-cols-1 md:grid-cols-2 max-w-2xl"
-                : "grid-cols-1 max-w-md mx-auto"
-            }`}
-          >
-            {/* 2D View */}
-            {(viewMode === "split" || viewMode === "2d") && (
-              <div className="border border-white/10 bg-white/[0.01] p-6 flex flex-col items-center justify-center relative aspect-square">
-                <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/40">
-                  Matrix 2D // Orthogonal
-                </span>
-                <Canvas2D text={inputVal} />
-              </div>
-            )}
-
-            {/* Standard Branchy View */}
-            {viewMode === "branchy" && (
-              <div className="bg-black border border-black p-6 flex flex-col items-center justify-center relative aspect-square shadow-2xl">
-                <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/60">
-                  Matrix Graph // Normal ({branchStyle.toUpperCase()})
-                </span>
-                <CanvasBranchy text={inputVal} branchStyle={branchStyle} scale="normal" />
-              </div>
-            )}
-
-            {/* Small Branchy View (4th Mode) */}
-            {viewMode === "branchy-small" && (
-              <div className="bg-black border border-black p-6 flex flex-col items-center justify-center relative aspect-square shadow-2xl">
-                <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/60">
-                  Matrix Graph // Small ({branchStyle.toUpperCase()})
-                </span>
-                <CanvasBranchy text={inputVal} branchStyle={branchStyle} scale="small" />
-              </div>
-            )}
-
-            {/* Extra Small Branchy View (5th Mode - Micro Readable) */}
-            {viewMode === "branchy-xsmall" && (
-              <div className="bg-black border border-black p-6 flex flex-col items-center justify-center relative aspect-square shadow-2xl">
-                <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/60">
-                  Matrix Graph // Extra Small [Micro Readable]
-                </span>
-                <CanvasBranchy text={inputVal} branchStyle={branchStyle} scale="xsmall" />
-              </div>
-            )}
-
-            {/* 3D View */}
-            {(viewMode === "split" || viewMode === "3d") && (
-              <div className="border border-white/10 bg-white/[0.01] p-6 flex flex-col items-center justify-center relative aspect-square">
-                <span className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-white/40">
-                  {viewMode === "3d" ? "Matrix 3D // Kinetic" : "Matrix 3D // Volumetric"}
-                </span>
-                <Viewer3D text={inputVal} autoRotate={true} />
-              </div>
-            )}
-          </div>
-        )}
-      </section>
-
-      {/* Footer */}
-      <footer className={`border-t pt-6 flex justify-between text-xs tracking-wider ${isBranchyAny ? "border-black/10 text-black/40" : "border-white/10 text-white/40"}`}>
-        <span>Oksa -project presents worlds first 2D and 3D identity branches. </span>
-        <span>Bidirectional, read/write, steganographically embedded text to graphic and back. Unique Oksa for everyone!</span>
       </footer>
     </main>
+  );
+}
+
+function VisualizerCard({
+  children,
+  title,
+  subtitle,
+}: {
+  children: React.ReactNode;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <Card className="min-w-0 overflow-hidden">
+      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
+        <h3 className="text-sm font-semibold">{title}</h3>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          {subtitle}
+        </span>
+      </div>
+      <CardContent className="flex min-h-[340px] items-center justify-center bg-slate-50/70 p-4 sm:p-6">
+        {children}
+      </CardContent>
+    </Card>
   );
 }

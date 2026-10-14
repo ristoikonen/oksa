@@ -48,7 +48,7 @@ export default function App() {
             <CardContent className="space-y-6 p-5 sm:p-6">
               <div>
                 <h2 className="text-base font-semibold tracking-tight">Identity input</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Create a visual from up to nine characters.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Create a visual asset up to nine characters.</p>
               </div>
 
               <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function App() {
                   className="h-12 text-center font-mono text-lg tracking-[0.3em] uppercase"
                 />
                 <div id="identity-count" className="flex justify-between text-xs text-muted-foreground">
-                  <span>Sparse encoding</span>
+                  <span></span>
                   <span>{inputVal.length} / 9</span>
                 </div>
               </div>
@@ -121,7 +121,8 @@ export default function App() {
         </aside>
 
         <section className="min-w-0 space-y-4">
-{/*  
+
+          {/*  
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Workspace</p>
@@ -130,9 +131,10 @@ export default function App() {
            <p className="text-sm text-muted-foreground">
               {is2Way ? "Forward and reverse mapping" : `${viewMode.replace("branchy-", "").replace("branchy", "branch").toUpperCase()} render`}
             </p> 
-          </div>*/}
+          </div>
+          */}
 
-                    <Card className="border-blue-100 bg-blue-50/70 shadow-none">
+          <Card className="border-blue-100 bg-blue-50/70 shadow-none">
             <CardContent className="p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">Identity preview</p>
               <p className="mt-2 break-all font-mono text-lg font-semibold tracking-[0.2em] text-blue-700">
@@ -156,15 +158,13 @@ export default function App() {
             </VisualizerCard>
           )}
 
-
-
         </section>
       </div>
 
       <footer className="border-t border-border bg-card">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:px-6 md:flex-row md:justify-between lg:px-8">
-          <span>&copy;Risto Ikonen 2026.  All rights reserved.</span>
-          <span>Graphic asset as a lossless container carrier.</span>
+          <span>OKSA PROJECT</span>
+          <span className="md:ml-auto">&copy;Risto Ikonen 2026.  All rights reserved.</span>
         </div>
       </footer>
     </main>

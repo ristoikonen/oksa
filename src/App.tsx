@@ -156,14 +156,12 @@ export default function App() {
             </VisualizerCard>
           )}
 
-
-
         </section>
       </div>
 
       <footer className="border-t border-border bg-card">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:px-6 md:flex-row md:justify-between lg:px-8">
-          <span>&copy;Risto Ikonen 2026.  All rights reserved.</span>
+          <span>All rights reserved. &copy;Risto Ikonen 2026.  Design Curation: Henri Ikonen </span>
           <span>Graph is a lossless text container.</span>
         </div>
       </footer>

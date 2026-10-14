@@ -6,7 +6,7 @@ import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
 
 export default function App() {
-  const [inputVal, setInputVal] = useState<string>("OKSA-01");
+  const [inputVal, setInputVal] = useState<string>("SIIRI");
   const [viewMode, setViewMode] = useState<
     "branchy" | "branchy-small" | "branchy-xsmall" | "2way"
   >("branchy");
@@ -33,12 +33,12 @@ export default function App() {
             <span className="size-2.5 rounded-full bg-[#f78522] shadow-[0_0_8px_#f78522]" aria-hidden="true" />
             <div>
               <h1 className="text-sm font-semibold tracking-wide">OKSA PROJECT</h1>
-              <p className="mt-0.5 text-xs text-muted-foreground">Bi-directional identity asset</p>
+              {/* <p className="mt-0.5 text-xs text-muted-foreground">Prototype</p> */}
             </div>
           </div>
-          <span className="hidden rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 sm:inline-flex">
+{/*           <span className="hidden rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 sm:inline-flex">
             Visual identity studio
-          </span>
+          </span> */}
         </div>
       </header>
 
@@ -117,7 +117,22 @@ export default function App() {
             </CardContent>
           </Card>
 
-          <Card className="border-blue-100 bg-blue-50/70 shadow-none">
+
+        </aside>
+
+        <section className="min-w-0 space-y-4">
+{/*  
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Workspace</p>
+               <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Identity visualizer</h2>
+            </div>
+           <p className="text-sm text-muted-foreground">
+              {is2Way ? "Forward and reverse mapping" : `${viewMode.replace("branchy-", "").replace("branchy", "branch").toUpperCase()} render`}
+            </p> 
+          </div>*/}
+
+                    <Card className="border-blue-100 bg-blue-50/70 shadow-none">
             <CardContent className="p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">Identity preview</p>
               <p className="mt-2 break-all font-mono text-lg font-semibold tracking-[0.2em] text-blue-700">
@@ -125,18 +140,6 @@ export default function App() {
               </p>
             </CardContent>
           </Card>
-        </aside>
-
-        <section className="min-w-0 space-y-4">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Workspace</p>
-              <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Identity visualizer</h2>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {is2Way ? "Forward and reverse mapping" : `${viewMode.replace("branchy-", "").replace("branchy", "branch").toUpperCase()} render`}
-            </p>
-          </div>
 
           {is2Way ? (
             <BidirectionalBridge text={inputVal} />
@@ -152,13 +155,16 @@ export default function App() {
               />
             </VisualizerCard>
           )}
+
+
+
         </section>
       </div>
 
       <footer className="border-t border-border bg-card">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:px-6 md:flex-row md:justify-between lg:px-8">
-          <span>Oksa · visual identity branches</span>
-          <span>Bi-directional, read/write visual identity concept</span>
+          <span>&copy;Risto Ikonen 2026.  All rights reserved.</span>
+          <span>Graphic asset as a lossless container carrier.</span>
         </div>
       </footer>
     </main>

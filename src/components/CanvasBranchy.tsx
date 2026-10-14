@@ -44,20 +44,27 @@ export function CanvasBranchy({ text, branchStyle = "knotty", scale = "normal" }
 
     // Helper for connecting lines
     const drawConnections = (strokeColor: string, width: number, lineCap: CanvasLineCap = "round") => {
+      const firstPoint = points[0];
+      if (!firstPoint) return;
+
       ctx.strokeStyle = strokeColor;
       ctx.lineWidth = Math.max(0.6, width * scaleFactor);
       ctx.lineCap = lineCap;
       ctx.lineJoin = "round";
 
       ctx.beginPath();
-      if (points.length > 0) {
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 1; i < points.length; i++) {
-          ctx.lineTo(points[i].x, points[i].y);
-          if (i % 2 === 0 && i > 1) {
-            ctx.moveTo(points[i - 2].x, points[i - 2].y);
-            ctx.lineTo(points[i].x, points[i].y);
-          }
+      ctx.moveTo(firstPoint.x, firstPoint.y);
+      for (let i = 1; i < points.length; i++) {
+        const point = points[i];
+        if (!point) continue;
+
+        ctx.lineTo(point.x, point.y);
+        if (i % 2 === 0 && i > 1) {
+          const previousPoint = points[i - 2];
+          if (!previousPoint) continue;
+
+          ctx.moveTo(previousPoint.x, previousPoint.y);
+          ctx.lineTo(point.x, point.y);
         }
       }
       ctx.stroke();
@@ -70,32 +77,33 @@ export function CanvasBranchy({ text, branchStyle = "knotty", scale = "normal" }
 
       for (let i = 0; i < points.length; i++) {
         const p1 = points[i];
+        if (!p1) continue;
 
-        if (i + 1 < points.length) {
-          const p2 = points[i + 1];
-          const cpX = (p1.x + p2.x) / 2 + (i % 2 === 0 ? 8 : -8) * scaleFactor;
-          const cpY = (p1.y + p2.y) / 2 + (i % 3 === 0 ? -8 : 8) * scaleFactor;
+        const p2 = points[i + 1];
+        if (!p2) continue;
 
-          const baseW = scale === "xsmall" ? 1.5 : scale === "small" ? 2.5 : 3.6;
-          ctx.strokeStyle = "#1a1a1a";
-          ctx.lineWidth = Math.max(1, (baseW + Math.sin(i * 0.9) * 0.4) * scaleFactor);
+        const cpX = (p1.x + p2.x) / 2 + (i % 2 === 0 ? 8 : -8) * scaleFactor;
+        const cpY = (p1.y + p2.y) / 2 + (i % 3 === 0 ? -8 : 8) * scaleFactor;
+
+        const baseW = scale === "xsmall" ? 1.5 : scale === "small" ? 2.5 : 3.6;
+        ctx.strokeStyle = "#1a1a1a";
+        ctx.lineWidth = Math.max(1, (baseW + Math.sin(i * 0.9) * 0.4) * scaleFactor);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.quadraticCurveTo(cpX, cpY, p2.x, p2.y);
+        ctx.stroke();
+
+        if (scale !== "xsmall" && i % 2 === 0) {
+          const midT = 0.5;
+          const mx = (1 - midT) * (1 - midT) * p1.x + 2 * (1 - midT) * midT * cpX + midT * midT * p2.x;
+          const my = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * cpY; // wait, let's keep correct my calculation:
+          // Correct my calculation below:
+          const myCorrect = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * p2.y;
+
+          ctx.fillStyle = "#1a1a1a";
           ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.quadraticCurveTo(cpX, cpY, p2.x, p2.y);
-          ctx.stroke();
-
-          if (scale !== "xsmall" && i % 2 === 0) {
-            const midT = 0.5;
-            const mx = (1 - midT) * (1 - midT) * p1.x + 2 * (1 - midT) * midT * cpX + midT * midT * p2.x;
-            const my = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * cpY; // wait, let's keep correct my calculation:
-            // Correct my calculation below:
-            const myCorrect = (1 - midT) * (1 - midT) * p1.y + 2 * (1 - midT) * midT * cpY + midT * midT * p2.y;
-
-            ctx.fillStyle = "#1a1a1a";
-            ctx.beginPath();
-            ctx.arc(mx, myCorrect, 1.8 * scaleFactor, 0, Math.PI * 2);
-            ctx.fill();
-          }
+          ctx.arc(mx, myCorrect, 1.8 * scaleFactor, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 

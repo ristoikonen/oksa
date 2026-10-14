@@ -32,9 +32,9 @@ export default function App() {
         }`}
       >
         <div>
-          <h1 className="text-xl tracking-widest font-light">OKSA // ID</h1>
+          <h1 className="text-xl tracking-widest font-light">OKSA PROJECT</h1>
           <p className={`text-xs tracking-wider mt-1 ${isBranchyAny ? "text-black/50" : "text-white/40"}`}>
-            BI-DIRECTIONAL IDENTITY MATRIX [GLOW2]
+            BI-DIRECTIONAL IDENTITY ASSET.
           </p>
         </div>
         <div className="flex gap-1.5 flex-wrap">
@@ -172,8 +172,8 @@ export default function App() {
 
       {/* Footer */}
       <footer className={`border-t pt-6 flex justify-between text-xs tracking-wider ${isBranchyAny ? "border-black/10 text-black/40" : "border-white/10 text-white/40"}`}>
-        <span>Henri: Kayttaa Galois kenttaa, Reed-Solomon virheenkorjauksella</span>
-        <span>  - Oksa's approach is revolutionary. Presenting Worlds first Galois-Reed-Solomon identity branches.</span>
+        <span>Oksa -project presents worlds first 2D and 3D identity branches. </span>
+        <span>Bidirectional, read/write, steganographically embedded text to graphic and back. Unique Oksa for everyone!</span>
       </footer>
     </main>
   );

@@ -32,7 +32,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <span className="size-2.5 rounded-full bg-[#f78522] shadow-[0_0_8px_#f78522]" aria-hidden="true" />
             <div>
-              <h1 className="text-sm font-semibold tracking-wide">OKSA PROJECT</h1>
+              <h1 className="text-sm font-semibold tracking-wide">PROJECT RISUKKO</h1>
               {/* <p className="mt-0.5 text-xs text-muted-foreground">Prototype</p> */}
             </div>
           </div>
@@ -47,13 +47,13 @@ export default function App() {
           <Card>
             <CardContent className="space-y-6 p-5 sm:p-6">
               <div>
-                <h2 className="text-base font-semibold tracking-tight">Identity input</h2>
+                <h2 className="text-base font-semibold tracking-tight">Identifier input</h2>
                 <p className="mt-1 text-sm text-muted-foreground">Create a visual from up to nine characters.</p>
               </div>
 
               <div className="space-y-2">
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground" htmlFor="identity-string">
-                  Identity string
+                  Identifier string
                 </label>
                 <Input
                   id="identity-string"
@@ -65,8 +65,8 @@ export default function App() {
                   className="h-12 text-center font-mono text-lg tracking-[0.3em] uppercase"
                 />
                 <div id="identity-count" className="flex justify-between text-xs text-muted-foreground">
-                  <span>Sparse encoding</span>
-                  <span>{inputVal.length} / 9</span>
+                  <span></span>
+                  <span>Characters: {inputVal.length} / 9</span>
                 </div>
               </div>
 
@@ -125,7 +125,7 @@ export default function App() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Workspace</p>
-               <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Identity visualizer</h2>
+               <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Identifier visualizer</h2>
             </div>
            <p className="text-sm text-muted-foreground">
               {is2Way ? "Forward and reverse mapping" : `${viewMode.replace("branchy-", "").replace("branchy", "branch").toUpperCase()} render`}
@@ -134,7 +134,7 @@ export default function App() {
 
                     <Card className="border-blue-100 bg-blue-50/70 shadow-none">
             <CardContent className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">Identity preview</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">Identifier preview</p>
               <p className="mt-2 break-all font-mono text-lg font-semibold tracking-[0.2em] text-blue-700">
                 {inputVal || "—"}
               </p>
@@ -145,7 +145,7 @@ export default function App() {
             <BidirectionalBridge text={inputVal} />
           ) : (
             <VisualizerCard
-              title="Matrix graph"
+              title="Graph 8x8"
               subtitle={`${branchStyle} · ${viewMode === "branchy" ? "normal" : viewMode === "branchy-small" ? "small" : "x-small"}`}
             >
               <CanvasBranchy
@@ -164,7 +164,7 @@ export default function App() {
       <footer className="border-t border-border bg-card">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:px-6 md:flex-row md:justify-between lg:px-8">
           <span>&copy;Risto Ikonen 2026.  All rights reserved.</span>
-          <span>Graphic asset as a lossless container carrier.</span>
+          <span>Graph is a lossless text container.</span>
         </div>
       </footer>
     </main>

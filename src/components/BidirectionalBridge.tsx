@@ -33,7 +33,7 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
     <div className="w-full max-w-2xl rounded-xl border border-border bg-card p-4 font-mono text-xs text-foreground shadow-sm sm:p-6">
       <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
         <span className="tracking-widest uppercase text-muted-foreground">
-          Bi-Directional Pipeline [2WAY-OKSA]
+          [RISUKKO]
         </span>
         <span className="tracking-wider text-emerald-700">● SYNCED</span>
       </div>

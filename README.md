@@ -1,5 +1,8 @@
-# oksa
+# risukko
 
+## What's Coming Next
+
+> We are building the reverse side of our bidirectional processing. Soon, you will be able to upload or drag-and-drop a generated graph into the application interface.
 
 
 To install dependencies:

@@ -65,9 +65,7 @@ export function GlbPreview() {
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <h3 className="text-sm font-semibold">Local 3D model preview</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Choose a .glb file up to 50 MB. It stays in this browser and is not uploaded or saved.
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">Choose a .glb file up to 50 MB.</p>
         </div>
         <Button onClick={() => inputRef.current?.click()} variant="outline">
           {file ? "Choose another" : "Choose .glb"}

@@ -76,25 +76,39 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
           : glbStatus?.fileName
             ? `UNVERIFIED WITH ${glbStatus.fileName}`
             : "NO GLB SELECTED";
+  const statusHeaderText = glbStatus?.loading
+    ? `...`
+    : glbStatus?.error
+      ? "ERROR"
+      : isSynced
+        ? `MATCH`
+        : glbStatus?.identifier
+          ? `MISMATCH`
+          : glbStatus?.fileName
+            ? `UNVERIFIED`
+            : "";
+
   const statusColor = glbStatus?.error
-    ? "text-red-700"
+    ? "text-amber-700"
     : isSynced
       ? "text-emerald-700"
-      : glbStatus?.identifier || glbStatus?.fileName
+      : glbStatus?.identifier
         ? "text-amber-700"
         : "text-muted-foreground";
   const statusDotColor = glbStatus?.error
-    ? "bg-red-500"
+    ? "bg-amber-500"
     : isSynced
       ? "bg-emerald-500"
-      : glbStatus?.identifier || glbStatus?.fileName
+      : glbStatus?.identifier
         ? "bg-amber-500"
         : "bg-slate-300";
 
   return (
     <div className="w-full max-w-2xl rounded-xl border border-border bg-card p-4 font-mono text-xs text-foreground shadow-sm sm:p-6">
       <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
-        <span className="tracking-widest uppercase text-muted-foreground">[RISUKKO]</span>
+        <span className="text-xl tracking-widest uppercase">
+          {statusHeaderText}{isSynced && !glbStatus.loading ? ":" + glbStatus?.identifier : ""}
+        </span>
         <span className={`inline-flex items-center gap-2 tracking-wider ${statusColor}`}>
           <span className={`size-2 rounded-full ${statusDotColor}`} aria-hidden="true" />
           {statusText}
@@ -115,11 +129,6 @@ export function BidirectionalBridge({ text }: BidirectionalBridgeProps) {
             event.currentTarget.value = "";
           }}
         />
-        {glbStatus?.identifier && !glbStatus.loading && (
-          <span className="text-xs text-muted-foreground">
-            GLB identifier: <strong className="font-semibold text-foreground">{glbStatus.identifier}</strong>
-          </span>
-        )}
         {glbStatus?.error && (
           <span className="text-xs text-red-700" role="alert">{glbStatus.error}</span>
         )}

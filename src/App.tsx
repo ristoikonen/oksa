@@ -1,21 +1,14 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { useState } from "react";
 import { CanvasBranchy, type BranchStyle } from "./components/CanvasBranchy";
 import { BidirectionalBridge } from "./components/BidirectionalBridge";
 import { Button } from "./components/ui/button";
 import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
 
-const GlbPreview = lazy(() =>
-  import("./components/GlbPreview").then(({ GlbPreview }) => ({ default: GlbPreview })),
-);
-const Viewer3D = lazy(() =>
-  import("./components/Viewer3D").then(({ Viewer3D }) => ({ default: Viewer3D })),
-);
-
 export default function App() {
   const [inputVal, setInputVal] = useState<string>("SIIRI");
   const [viewMode, setViewMode] = useState<
-    "branchy" | "branchy-small" | "branchy-xsmall" | "2way" | "3d" | "model"
+    "branchy" | "branchy-small" | "branchy-xsmall" | "2way"
   >("branchy");
   const [branchStyle, setBranchStyle] = useState<BranchStyle>("knotty");
 
@@ -30,8 +23,6 @@ export default function App() {
     { id: "branchy-small", label: "Small" },
     { id: "branchy-xsmall", label: "X-small" },
     { id: "2way", label: "2-way" },
-    { id: "3d", label: "3D identity" },
-    { id: "model", label: "3D model" },
   ] as const;
 
   return (
@@ -154,16 +145,6 @@ export default function App() {
 
           {is2Way ? (
             <BidirectionalBridge text={inputVal} />
-          ) : viewMode === "model" ? (
-            <Suspense fallback={<p className="py-8 text-center text-sm text-muted-foreground">Loading 3D preview…</p>}>
-              <GlbPreview />
-            </Suspense>
-          ) : viewMode === "3d" ? (
-            <Suspense fallback={<p className="py-8 text-center text-sm text-muted-foreground">Loading 3D identity…</p>}>
-              <VisualizerCard title="Matrix 3D" subtitle="Generated from identifier">
-                <Viewer3D text={inputVal} autoRotate />
-              </VisualizerCard>
-            </Suspense>
           ) : (
             <VisualizerCard
               title="Graph 8x8"

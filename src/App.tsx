@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { checkIdentifierExists, storeIdentifier } from "@/storage"; "./src/storage";
 import { CanvasBranchy, type BranchStyle } from "./components/CanvasBranchy";
 import { BidirectionalBridge } from "./components/BidirectionalBridge";
 import { Button } from "./components/ui/button";
@@ -12,10 +13,62 @@ export default function App() {
   >("branchy");
   const [branchStyle, setBranchStyle] = useState<BranchStyle>("knotty");
 
+  const saveId = (value: string) => {
+  // Clean and transform the input string
+  const ucaseid = value.trim().toUpperCase();
+
+  // Bottom value check: Block empty strings or pure spaces
+  if (!ucaseid) {
+    console.error("Validation failed: Identifier string cannot be empty.");
+    // Add toast or warning state here if needed
+    return;
+  }
+
+  // Top value check: Ensure value does not exceed maximum allowable payload lengths
+  if (ucaseid.length > 9) {
+    console.error("Validation failed: Identifier strings must not exceed 9 characters.");
+    return;
+  }
+
+  // Execution boundary: Code safely runs when bounds are satisfied
+  console.log("Saving verified identifier:", ucaseid);
+  // Execute your endpoint saving sequence or state persistence layers here...
+};
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cleaned = e.target.value.toUpperCase().slice(0, 9);
     setInputVal(cleaned);
   };
+
+/* 
+  const saveId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const ucaseid = e.target.value.toUpperCase();
+
+        const cleanName = 'RISUKKO'.slice(0, 9);
+        const canvasSize =  512;
+        const padding =  32;
+        const variant =  0x02; 
+        const style =  0x01;     
+
+        // Pack into 14-byte binary buffer
+        const encoder = new TextEncoder();
+        const nameBytes = encoder.encode(cleanName);
+        
+        const buffer = new Uint8Array(14);
+        buffer.set(nameBytes, 0);
+
+        //console.log(buffer);
+        
+        const view = new DataView(buffer.buffer);
+        view.setUint16(9, canvasSize);
+        view.setUint8(11, padding);
+        buffer[12] = variant;
+        buffer[13] = style;
+
+
+    storeIdentifier(ucaseid, new )
+    console.log(inputVal || '');
+  }; */
 
   const is2Way = viewMode === "2way";
   const modes = [
@@ -132,7 +185,7 @@ export default function App() {
             </p> 
           </div>*/}
 
-                    <Card className="border-blue-100 bg-blue-50/70 shadow-none">
+          <Card className="border-blue-100 bg-blue-50/70 shadow-none">
             <CardContent className="p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">Identifier preview</p>
               <p className="mt-2 break-all font-mono text-lg font-semibold tracking-[0.2em] text-blue-700">
@@ -155,6 +208,29 @@ export default function App() {
               />
             </VisualizerCard>
           )}
+
+
+
+          <Card className="border-blue-100 bg-blue-50/70 shadow-none">
+            <CardContent className="p-4">
+              <div>
+              {/* <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">SAVE</p>
+              <h2 className="text-base font-semibold tracking-tight">Save As My Identidier</h2> */}
+
+                    <Button
+                      key="save-identifier-btn"
+                      className="w-full"
+                      onClick={() => saveId(inputVal)} // Pass the string value directly
+                      //size="l"
+                    >
+                      Save As My Identifier
+                    </Button>
+              </div>
+              
+            </CardContent>
+          </Card>
+
+
 
         </section>
       </div>

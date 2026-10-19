@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { checkIdentifierExists, storeIdentifier } from "@/storage"; "./src/storage";
+//import { checkIdentifierExists, storeIdentifier } from "@/storage"; "./src/storage";
 import { CanvasBranchy, type BranchStyle } from "./components/CanvasBranchy";
 import { BidirectionalBridge } from "./components/BidirectionalBridge";
 import { Button } from "./components/ui/button";
@@ -31,7 +31,7 @@ export default function App() {
   }
 
   // Execution boundary: Code safely runs when bounds are satisfied
-  console.log("Saving verified identifier:", ucaseid);
+  //console.log("Saving verified identifier:", ucaseid);
   // Execute your endpoint saving sequence or state persistence layers here...
 };
 
@@ -101,7 +101,7 @@ export default function App() {
             <CardContent className="space-y-6 p-5 sm:p-6">
               <div>
                 <h2 className="text-base font-semibold tracking-tight">Identifier input</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Create a visual from up to nine characters.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Create a graph from up to nine characters.</p>
               </div>
 
               <div className="space-y-2">
@@ -209,7 +209,7 @@ export default function App() {
             </VisualizerCard>
           )}
 
-          <Card className="border-blue-100 bg-blue-50/70 shadow-none">
+{/*           <Card className="border-blue-100 bg-blue-50/70 shadow-none">
             <CardContent className="p-4">
               <div>
                 <Button
@@ -223,7 +223,7 @@ export default function App() {
               </div>
               
             </CardContent>
-          </Card>
+          </Card> */}
 
 
 

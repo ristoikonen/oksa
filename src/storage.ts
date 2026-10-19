@@ -47,7 +47,6 @@ class IdentifierCache {
   }
 }
 
-
 const idCache = new IdentifierCache();
 
 /**

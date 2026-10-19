@@ -209,22 +209,17 @@ export default function App() {
             </VisualizerCard>
           )}
 
-
-
           <Card className="border-blue-100 bg-blue-50/70 shadow-none">
             <CardContent className="p-4">
               <div>
-              {/* <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">SAVE</p>
-              <h2 className="text-base font-semibold tracking-tight">Save As My Identidier</h2> */}
-
-                    <Button
-                      key="save-identifier-btn"
-                      className="w-full"
-                      onClick={() => saveId(inputVal)} // Pass the string value directly
-                      //size="l"
-                    >
-                      Save As My Identifier
-                    </Button>
+                <Button
+                  key='save-btn'
+                  className="w-full"
+                  //size="l"
+                  onClick={() => saveId(inputVal)} // Fixed string param mapping
+                >
+                  Save As My Identifier
+                </Button>
               </div>
               
             </CardContent>

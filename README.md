@@ -5,11 +5,15 @@ Text to graph showcase app.
 
 ## Glow2 Design Palette
 
-Cyan (#38bdf8): Active links, logo accents, primary highlights.
-Rose / Coral (#f43f5e): Post-quantum security badges and variant indicators.
-Emerald (#10b981): Live Bun API status indicators and operational states.
-Purple (#a855f7): Specialized padding and UI markers.
-Yellow (#f78522): Telemetry highlights, payload hashes, and byte map tags.
+> <span style="color:#38bdf8">Active links, logo accents, primary highlights.</span>
+
+> <span style="color:#f43f5e"> Post-quantum security badges and variant indicators.</span>
+
+> <span style="color:#a855f7">Specialized padding and UI markers.</span>
+
+> <span style="color:#f78522">Telemetry highlights, payload hashes, and byte map tags.</span>
+
+>  <span style="color:#10b981">Live Bun API status indicators and operational states.</span>
 
 
 ## What's Coming Next
